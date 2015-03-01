@@ -23,16 +23,16 @@ func getCopyCommand() *exec.Cmd {
 	return exec.Command(copyCmdArgs)
 }
 
-func readAll() (string, error) {
+func readAll() ([]byte, error) {
 	pasteCmd := getPasteCommand()
 	out, err := pasteCmd.Output()
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return string(out), nil
+	return out, nil
 }
 
-func writeAll(text string) error {
+func writeAll(data []byte) error {
 	copyCmd := getCopyCommand()
 	in, err := copyCmd.StdinPipe()
 	if err != nil {
@@ -42,7 +42,7 @@ func writeAll(text string) error {
 	if err := copyCmd.Start(); err != nil {
 		return err
 	}
-	if _, err := in.Write([]byte(text)); err != nil {
+	if _, err := in.Write(data); err != nil {
 		return err
 	}
 	if err := in.Close(); err != nil {

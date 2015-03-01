@@ -5,12 +5,13 @@
 package clipboard_test
 
 import (
-	. "."
 	"testing"
+
+	. "."
 )
 
 func TestCopyAndPaste(t *testing.T) {
-	expected := "日本語"
+	expected := []byte("日本語")
 
 	err := WriteAll(expected)
 	if err != nil {
@@ -22,14 +23,14 @@ func TestCopyAndPaste(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if actual != expected {
+	if string(actual) != string(expected) {
 		t.Errorf("want %s, got %s", expected, actual)
 	}
 }
 
 func TestMultiCopyAndPaste(t *testing.T) {
-	expected1 := "French: éèêëàùœç"
-	expected2 := "Weird UTF-8: 💩☃"
+	expected1 := []byte("French: éèêëàùœç")
+	expected2 := []byte("Weird UTF-8: 💩☃")
 
 	err := WriteAll(expected1)
 	if err != nil {
@@ -40,7 +41,7 @@ func TestMultiCopyAndPaste(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if actual1 != expected1 {
+	if string(actual1) != string(expected1) {
 		t.Errorf("want %s, got %s", expected1, actual1)
 	}
 
@@ -53,7 +54,7 @@ func TestMultiCopyAndPaste(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if actual2 != expected2 {
+	if string(actual2) != string(expected2) {
 		t.Errorf("want %s, got %s", expected2, actual2)
 	}
 }
@@ -65,7 +66,7 @@ func BenchmarkReadAll(b *testing.B) {
 }
 
 func BenchmarkWriteAll(b *testing.B) {
-	text := "いろはにほへと"
+	text := []byte("いろはにほへと")
 	for i := 0; i < b.N; i++ {
 		WriteAll(text)
 	}

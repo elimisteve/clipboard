@@ -32,34 +32,34 @@ var (
 	lstrcpy      = kernel32.NewProc("lstrcpyW")
 )
 
-func readAll() (string, error) {
+func readAll() ([]byte, error) {
 	r, _, err := openClipboard.Call(0)
 	if r == 0 {
-		return "", err
+		return nil, err
 	}
 	defer closeClipboard.Call()
 
 	h, _, err := getClipboardData.Call(cfUnicodetext)
 	if r == 0 {
-		return "", err
+		return nil, err
 	}
 
 	l, _, err := globalLock.Call(h)
 	if l == 0 {
-		return "", err
+		return nil, err
 	}
 
 	text := syscall.UTF16ToString((*[1 << 20]uint16)(unsafe.Pointer(l))[:])
 
 	r, _, err = globalUnlock.Call(h)
 	if r == 0 {
-		return "", err
+		return nil, err
 	}
 
-	return text, nil
+	return []byte(text), nil
 }
 
-func writeAll(text string) error {
+func writeAll(text []byte) error {
 	r, _, err := openClipboard.Call(0)
 	if r == 0 {
 		return err
@@ -71,7 +71,7 @@ func writeAll(text string) error {
 		return err
 	}
 
-	data := syscall.StringToUTF16(text)
+	data := syscall.StringToUTF16(string(text))
 
 	h, _, err := globalAlloc.Call(gmemFixed, uintptr(len(data)*int(unsafe.Sizeof(data[0]))))
 	if h == 0 {

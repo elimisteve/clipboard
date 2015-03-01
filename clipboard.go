@@ -5,14 +5,12 @@
 // Package clipboard read/write on clipboard
 package clipboard
 
-import ()
-
-// ReadAll read string from clipboard
-func ReadAll() (string, error) {
+// ReadAll read data from clipboard
+func ReadAll() ([]byte, error) {
 	return readAll()
 }
 
 // WriteAll write string to clipboard
-func WriteAll(text string) error {
-	return writeAll(text)
+func WriteAll(data []byte) error {
+	return writeAll(data)
 }

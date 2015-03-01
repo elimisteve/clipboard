@@ -1,16 +1,16 @@
 package main
 
 import (
-	"github.com/atotto/clipboard"
+	"github.com/elimisteve/clipboard"
 
 	"fmt"
 )
 
 func main() {
-	text, err := clipboard.ReadAll()
+	data, err := clipboard.ReadAll()
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Print(text)
+	fmt.Print(string(data))
 }
